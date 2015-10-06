@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using System.Collections;
 
-public class PointProcessing : MonoBehaviour
+public class PointProcessing : Singleton<PointProcessing>
 {
 
     public Texture2D InputTex;
@@ -11,6 +11,7 @@ public class PointProcessing : MonoBehaviour
 
 	void Start ()
 	{
+        /*
         //Sort testing
 	    int[] test = new[] {1, 1, 50, 1, 2};
 	    test = BubbleSort(test);
@@ -18,7 +19,6 @@ public class PointProcessing : MonoBehaviour
 	    {
 	        Debug.Log(test[i]);
 	    }
-
 
         tex = new Texture2D(InputTex.width, InputTex.height);
 	    Color[,] image = GetPixels2D(InputTex);
@@ -33,8 +33,8 @@ public class PointProcessing : MonoBehaviour
 	    //image = Exponential(image, 1.02f);
 
 	    SetPixels2D(image, tex);
-
 	    this.GetComponent<Renderer>().material.mainTexture = tex;
+        */
 	}
 
     /// <summary>
@@ -282,12 +282,12 @@ public class PointProcessing : MonoBehaviour
     /// </summary>
     /// <param name="input">input 1d array</param>
     /// <returns>sorted 1d array</returns>
-    public int[] BubbleSort(int[] input)
+    public float[] BubbleSort(float[] input)
     {
         for (int i = 0; i < input.Length; i++) {
             for (int j = 0; j < input.Length - 1 - i; j++)
             {
-                int tmp;
+                float tmp;
                 if (input[j] < input[j + 1])
                 {
                     tmp = input[j];
