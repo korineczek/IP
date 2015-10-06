@@ -11,12 +11,20 @@ public class PointProcessing : MonoBehaviour
 
 	void Start ()
 	{
-        tex = new Texture2D(InputTex.width, InputTex.height);
+        //Sort testing
+	    int[] test = new[] {1, 1, 50, 1, 2};
+	    test = BubbleSort(test);
+	    for (int i = 0; i < test.Length; i++)
+	    {
+	        Debug.Log(test[i]);
+	    }
 
+
+        tex = new Texture2D(InputTex.width, InputTex.height);
 	    Color[,] image = GetPixels2D(InputTex);
 
 	    //image = Invert(image);
-	    image = Treshold(image, 0.5f);
+	    //image = Treshold(image, 0.5f);
 	    //image = Rgb2Grayscale(image);
 	    //image = Brightness(image, +50);
 	    //image = Contrast(image, 2f);
@@ -255,6 +263,7 @@ public class PointProcessing : MonoBehaviour
 
         float max = texture1d.Max()*255;
         float c = 255.0f / (Mathf.Pow(k, max) - 1);
+
         //Map image
         for (int w = 0; w < i.GetLength(1); w++)
         {
@@ -266,5 +275,27 @@ public class PointProcessing : MonoBehaviour
             }
         }
         return i;
+    }
+
+    /// <summary>
+    /// Descending sort
+    /// </summary>
+    /// <param name="input">input 1d array</param>
+    /// <returns>sorted 1d array</returns>
+    public int[] BubbleSort(int[] input)
+    {
+        for (int i = 0; i < input.Length; i++) {
+            for (int j = 0; j < input.Length - 1 - i; j++)
+            {
+                int tmp;
+                if (input[j] < input[j + 1])
+                {
+                    tmp = input[j];
+                    input[j] = input[j + 1];
+                    input[j + 1] = tmp;
+                }
+            }
+        }
+        return input;
     }
 }
