@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using System.Collections;
 
-public class NeighborhoodOperations : MonoBehaviour
+public class NeighborhoodOperations : Singleton<NeighborhoodOperations>
 {
 
     public Texture2D InputTex;
@@ -25,23 +25,15 @@ public class NeighborhoodOperations : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        /*
-        Debug.Log(Gaussian2D(1,0,0));
-        Debug.Log(Gaussian2D(1, 0, 1));
-        Debug.Log(Gaussian2D(1, -1, -1));
-        Debug.Log(Gaussian2D(1, 1, 1));
-         * */
-
         tex = new Texture2D(InputTex.width, InputTex.height);
         Color[,] image = PointProcessing.Instance.GetPixels2D(InputTex);
 
-        // image = Rank(image, 9, 1);
+        //image = Rank(image, 9, 1);
         //image = Edge(image, sobelX, sobelY, 0.25f);
         image = GaussianBlur(image, 2f, 7);
-        // image = PointProcessing.Instance.Rgb2Grayscale(image);
+        //image = PointProcessing.Instance.Rgb2Grayscale(image);
 
         PointProcessing.Instance.SetPixels2D(image, tex);
-        Debug.Log(image[2,2]);
         this.GetComponent<Renderer>().material.mainTexture = tex;
     }
 
@@ -143,7 +135,7 @@ public class NeighborhoodOperations : MonoBehaviour
                         sumH += tmp[w + j, h + l].r*kx[j+kw,l+kh];
                     }
                 }
-                sumH = sumH < t ? 0f : 1f;
+                sumH = (Mathf.Abs(sumH) < t ? 0f : 1f);
 
                 //perform vertical correlation
                 float sumV = 0f;
@@ -154,7 +146,7 @@ public class NeighborhoodOperations : MonoBehaviour
                         sumV += tmp[w + j, h + l].r * ky[j + kw, l + kh];
                     }
                 }
-                sumV = sumV < t ? 0f : 1f;
+                sumV = (Mathf.Abs(sumV) < t ? 0f : 1f);
                 
                 result[w, h].r = sumH + sumV;
                 result[w, h].g = sumH + sumV;
@@ -164,6 +156,14 @@ public class NeighborhoodOperations : MonoBehaviour
         return result;
     }
 
+
+    /// <summary>
+    /// Blur filter that follows the values of a gaussian function.
+    /// </summary>
+    /// <param name="i">input image</param>
+    /// <param name="sig">sigma (width)</param>
+    /// <param name="k">kernel size</param>
+    /// <returns>modified image</returns>
     public Color[,] GaussianBlur(Color[,] i, float sig, int k)
     {
         Color[,] tmp = i;
@@ -219,6 +219,13 @@ public class NeighborhoodOperations : MonoBehaviour
         return i;
     }
 
+    /// <summary>
+    /// Return a value from 2d gaussian distribution.
+    /// </summary>
+    /// <param name="sig">sigma(width)</param>
+    /// <param name="x">x position</param>
+    /// <param name="y">y position</param>
+    /// <returns>result following the gaussian distribution</returns>
     public float Gaussian2D(float sig, float x, float y)
     {
         float e = Mathf.Exp(-(Mathf.Pow(x, 2f) + Mathf.Pow(y, 2f))/(2*Mathf.Pow(sig,2)));
