@@ -51,9 +51,9 @@ public class NeighborhoodOperations : Singleton<NeighborhoodOperations>
         int kw = k / 2;
         int kh = k / 2;
 
-        for (int w = 0 + kw; w < i.GetLength(1) - kw; w++)
+        for (int w = 0 + kw; w < i.GetLength(0) - kw; w++)
         {
-            for (int h = 0 + kh; h < i.GetLength(0) - kh; h++)
+            for (int h = 0 + kh; h < i.GetLength(1) - kh; h++)
             {
                 int count = 0;
                 // do median
@@ -116,15 +116,15 @@ public class NeighborhoodOperations : Singleton<NeighborhoodOperations>
         //set source image to grayscale
         tmp = PointProcessing.Instance.Rgb2Grayscale(i);
 
-        Color[,] result = new Color[i.GetLength(1),i.GetLength(0)]; 
+        Color[,] result = new Color[i.GetLength(0),i.GetLength(1)]; 
 
         int kw = kx.GetLength(1) / 2;
         int kh = ky.GetLength(0) / 2;
 
 
-        for (int w = 0 + kw; w < i.GetLength(1) - kw; w++)
+        for (int w = 0 + kw; w < i.GetLength(0) - kw; w++)
         {
-            for (int h = 0 + kh; h < i.GetLength(0) - kh; h++)
+            for (int h = 0 + kh; h < i.GetLength(1) - kh; h++)
             {
                 //perform horizontal correlation
                 float sumH = 0f;
@@ -193,9 +193,9 @@ public class NeighborhoodOperations : Singleton<NeighborhoodOperations>
         }
 
         //Apply kernel to image
-        for (int w = 0 + kw; w < i.GetLength(1) - kw; w++)
+        for (int w = 0 + kw; w < i.GetLength(0) - kw; w++)
         {
-            for (int h = 0 + kh; h < i.GetLength(0) - kh; h++)
+            for (int h = 0 + kh; h < i.GetLength(1) - kh; h++)
             {
                 //Blurring
                 float sumR = 0f;
