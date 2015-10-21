@@ -43,7 +43,6 @@ public class PointProcessing : Singleton<PointProcessing>
         Color[,] texture2d = new Color[t.width, t.height];
         Color[] texture1d = t.GetPixels();
 
-        Debug.Log(t.width +" " +t.height);
         for (int h = 0; h < t.height; h++)
         {
             for (int w = 0; w < t.width; w++)
@@ -51,7 +50,6 @@ public class PointProcessing : Singleton<PointProcessing>
                 texture2d[w, h] = texture1d[h * t.width + w];
             }
         }
-        Debug.Log(texture2d.GetLength(0)+" "+ texture2d.GetLength(1));
         return texture2d;
     }
 
@@ -67,17 +65,12 @@ public class PointProcessing : Singleton<PointProcessing>
         int width = i.GetLength(0);
         int height = i.GetLength(1);
 
-        Debug.Log(width);
-        Debug.Log(height);
-
         for (int h = 0; h < height; h++)
         {
             for (int w = 0; w < width; w++)
             {
-                Debug.Log("x");
                 texture1d[h * width + w] = i[w, h];
             }
-            Debug.Log("row done");
         }
         t.SetPixels(texture1d);
         t.Apply();
