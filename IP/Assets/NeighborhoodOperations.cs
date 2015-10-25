@@ -25,6 +25,7 @@ public class NeighborhoodOperations : Singleton<NeighborhoodOperations>
     // Use this for initialization
     void Start()
     {
+        /*
         tex = new Texture2D(InputTex.width, InputTex.height);
         Color[,] image = PointProcessing.Instance.GetPixels2D(InputTex);
 
@@ -35,6 +36,7 @@ public class NeighborhoodOperations : Singleton<NeighborhoodOperations>
 
         PointProcessing.Instance.SetPixels2D(image, tex);
         this.GetComponent<Renderer>().material.mainTexture = tex;
+         */
     }
 
     /// <summary>
