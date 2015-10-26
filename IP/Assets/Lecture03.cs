@@ -14,7 +14,7 @@ public class Lecture03 : MonoBehaviour {
         //image = HistogramEqualization(image);
         //image = Erosion(image, 3);
         //image = Dilation(image, 3);
-        image = BlobExtraction(image);
+        //image = BlobExtraction(image);
         //
         PointProcessing.Instance.SetPixels2D(image, tex);
 
@@ -142,11 +142,10 @@ public class Lecture03 : MonoBehaviour {
         {
             for (int h = 0 + k; h < i.GetLength(1) - k; h++)
             {
-                //perform horizontal correlation
                 float sum = 0f;
-                for (int j = -k; j <= +k; j++)
+                for (int j = -k / 2; j <= +k / 2; j++)
                 {
-                    for (int l = -k; l <= +k; l++)
+                    for (int l = -k / 2; l <= +k / 2; l++)
                     {
                         sum += i[w + j, h + l].r;
                     }
@@ -179,9 +178,9 @@ public class Lecture03 : MonoBehaviour {
             for (int h = 0 + k; h < i.GetLength(1) - k; h++)
             {
                 float sum = 0f;
-                for (int j = -k; j <= +k; j++)
+                for (int j = -k / 2; j <= +k / 2; j++)
                 {
-                    for (int l = -k; l <= +k; l++)
+                    for (int l = -k / 2; l <= +k / 2; l++)
                     {
                         sum += i[w + j, h + l].r;
                     }
@@ -212,9 +211,8 @@ public class Lecture03 : MonoBehaviour {
             {
                 if (i[w, h].r == 1f)
                 {
-                    Debug.Log("Blob Found");
                     label++;
-                    Grassfire(i,w,h,label*35);
+                    Grassfire(i,w,h,label*35); //change number in case there is a lot of blobs
                 }
             }   
         }
