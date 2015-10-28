@@ -35,6 +35,10 @@ public class _Manager : Singleton<_Manager>
         "histogram equalization",
         "erosion",
         "dilation",
+        "normalized RGB",
+        "detect red",
+        "detect green",
+        "detect blue",
 
     };
 
@@ -86,6 +90,18 @@ public class _Manager : Singleton<_Manager>
                 break;
             case 14:
                 Image = filters.Dilation(Image, 3);
+                break;
+            case 15:
+                Image = filters.NormalizedRgb(Image);
+                break;
+            case 16:
+                Image = filters.DetectColor(Image, new Color(220 / 255f, 30 / 255f, 30 / 255f), 50);
+                break;
+            case 17:
+                Image = filters.DetectColor(Image, new Color(30 / 255f, 220 / 255f, 30 / 255f), 50);
+                break;
+            case 18:
+                Image = filters.DetectColor(Image, new Color(30 / 255f, 30 / 255f, 220 / 255f), 50);
                 break;
 
         }

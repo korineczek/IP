@@ -16,7 +16,7 @@ public class _Filters : Singleton<_Filters>
                                           {-2,+0,+2},
                                           {-1,+0,+1}};
 
-    #region PointProcessing
+    #region Lecture01 PointProcessing
     /// <summary>
     /// Converts an RGB image into a Greyscale Image
     /// </summary>
@@ -215,7 +215,7 @@ public class _Filters : Singleton<_Filters>
     }
     #endregion
 
-    #region NeighborhoodOperations
+    #region Lecture02 NeighborhoodOperations
     /// <summary>
     /// Median filtering
     /// </summary>
@@ -413,6 +413,7 @@ public class _Filters : Singleton<_Filters>
     }
     #endregion
 
+    #region Lecture03
     public Color[,] HistogramEqualization(Color[,] i)
     {
         //regular histograms
@@ -640,6 +641,48 @@ public class _Filters : Singleton<_Filters>
             Grassfire(i, x, y - 1, label);
         }
     }
-}
+    #endregion
 
+    public Color[,] NormalizedRgb(Color[,] i)
+    {
+        for (int w = 0; w < i.GetLength(0); w++)
+        {
+            for (int h = 0; h < i.GetLength(1); h++)
+            {
+                Color pix = i[w, h];
+                float sum = pix.r + pix.g + pix.b;
+                if (sum == 0f)
+                {
+                    i[w,h] = Color.black;
+                }
+                else
+                {
+                    i[w, h] = new Color(i[w, h].r / sum, i[w, h].g / sum, i[w, h].b / sum);
+                }
+            }
+        }
+        return i;
+    }
+
+    public Color[,] DetectColor(Color[,] i, Color targetColor, int spread)
+    {
+        for (int w = 0; w < i.GetLength(0); w++)
+        {
+            for (int h = 0; h < i.GetLength(1); h++)
+            {
+                Color pix = i[w, h];
+                if(Mathf.Abs(pix.r - targetColor.r)*255f < spread && Mathf.Abs(pix.g - targetColor.g)*255f < spread && Mathf.Abs(pix.b - targetColor.b)*255 < spread)
+                {
+                    i[w,h] = Color.white;
+                }
+                else
+                {
+                    i[w, h] = Color.black;  
+                }
+            }
+        }
+        return i;
+    }
+
+}
 
