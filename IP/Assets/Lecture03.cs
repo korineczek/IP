@@ -14,11 +14,11 @@ public class Lecture03 : MonoBehaviour {
         //image = HistogramEqualization(image);
         //image = Erosion(image, 3);
         //image = Dilation(image, 3);
-        //image = BlobExtraction(image);
+        image = BlobExtraction(image);
         //
         PointProcessing.Instance.SetPixels2D(image, tex);
 
-        ImageWrap1D(InputTex,5);
+        //ImageWrap1D(InputTex,5);
         //ImageMirror1D(InputTex);
         this.GetComponent<Renderer>().material.mainTexture = tex;
     }

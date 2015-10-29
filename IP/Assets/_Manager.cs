@@ -8,10 +8,12 @@ public class _Manager : Singleton<_Manager>
 {
     public Transform Target;
     public Texture2D InputTex;
+    public Texture2D ReferenceTex;
     private Texture2D tex;
 
-    [NonSerialized]
-    public Color[,] Image;
+    [NonSerialized] public Color[,] Image;
+
+    [NonSerialized] public Color[,] ReferenceImage;
 
     private _Filters filters;
     private _Functions functions;
@@ -39,6 +41,9 @@ public class _Manager : Singleton<_Manager>
         "detect red",
         "detect green",
         "detect blue",
+        "image subtraction",
+        "find blob weight",
+        "extract blobs",
 
     };
 
@@ -103,7 +108,15 @@ public class _Manager : Singleton<_Manager>
             case 18:
                 Image = filters.DetectColor(Image, new Color(30 / 255f, 30 / 255f, 220 / 255f), 50);
                 break;
-
+            case 19:
+                Image = filters.ImageSubtraction(Image, ReferenceImage);
+                break;
+            case 20:
+                filters.EvaluateFeatures(filters.GetBlobFeatures(filters.BlobExtraction(Image)));
+                break;
+            case 21:
+                Image = filters.BlobExtraction(Image);
+                break;
         }
 
         functions.SetPixels2D(Image, tex);
@@ -131,6 +144,7 @@ public class _Manager : Singleton<_Manager>
 	    //initialization setup
         tex = new Texture2D(InputTex.width, InputTex.height);
         Image = functions.GetPixels2D(InputTex);
+	    ReferenceImage = functions.GetPixels2D(ReferenceTex);
         functions.SetPixels2D(Image, tex);
         //display input on target
         Target.GetComponent<Renderer>().material.mainTexture = tex;

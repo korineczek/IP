@@ -603,7 +603,7 @@ public class _Filters : Singleton<_Filters>
                 if (i[w, h].r == 1f)
                 {
                     label++;
-                    Grassfire(i,w,h,label*35); //change number in case there is a lot of blobs
+                    Grassfire(i,w,h,label*1); //change number in case there is a lot of blobs
                 }
             }   
         }
@@ -684,5 +684,55 @@ public class _Filters : Singleton<_Filters>
         return i;
     }
 
+    public Color[,] ImageSubtraction(Color[,] i, Color[,] reference)
+    {
+        Color[,] result = new Color[i.GetLength(0),i.GetLength(1)];
+
+        for (int w = 0; w < i.GetLength(0); w++)
+        {
+            for (int h = 0; h < i.GetLength(1); h++)
+            {
+                result[w, h].r = Mathf.Abs(i[w, h].r - reference[w, h].r);
+                result[w, h].g = Mathf.Abs(i[w, h].g - reference[w, h].g);
+                result[w, h].b = Mathf.Abs(i[w, h].b - reference[w, h].b);
+            }
+        }
+        return result;
+    }
+
+    public int[,] GetBlobFeatures(Color[,] i)
+    {
+        int[,] features = new int[256,3]; //feature one = x coord, feature two = y coord, feature three = size
+
+        for (int w = 0; w < i.GetLength(0); w++)
+        {
+            for (int h = 0; h < i.GetLength(1); h++)
+            {
+                if (i[w, h].r > 0)
+                {
+                    features[(int) (i[w, h].r*255f), 0] += w;
+                    features[(int) (i[w, h].r*255f), 1] += h;
+                    features[(int) (i[w, h].r*255f), 2] ++;
+                }
+            }
+        }
+        return features;
+    }
+
+    public void EvaluateFeatures(int[,] features)
+    {
+        float[,] centerOfMass = new float[256,2];
+
+        for (int i = 0; i < 256; i++)
+        {
+            if (features[i, 2] > 0)
+            {
+                centerOfMass[i, 0] = features[i, 0]/(float) features[i, 2];
+                centerOfMass[i, 1] = features[i, 1]/(float) features[i, 2];
+
+                Debug.Log(centerOfMass[i, 0] + " " + centerOfMass[i, 1] + " size: " + features[i, 2]);
+            }
+        }
+    }
 }
 
