@@ -252,7 +252,7 @@ public class _Filters : Singleton<_Filters>
                 {
                     //median
                     case 1:
-                        neighborhood = PointProcessing.Instance.BubbleSort(neighborhood);
+                        neighborhood = _Functions.Instance.BubbleSort(neighborhood);
                         result = neighborhood[(int)neighborhood.Length / 2];
                         break;
 
@@ -293,7 +293,7 @@ public class _Filters : Singleton<_Filters>
     {
         Color[,] tmp = i;
         //set source image to grayscale
-        tmp = PointProcessing.Instance.Rgb2Grayscale(i);
+        tmp = Rgb2Grayscale(i);
 
         Color[,] result = new Color[i.GetLength(0), i.GetLength(1)];
 
@@ -525,7 +525,7 @@ public class _Filters : Singleton<_Filters>
     public Color[,] Erosion(Color[,] i, int k)
     {
         //set source image to grayscale
-        i = PointProcessing.Instance.Treshold(i, 0.5f);
+        i = Treshold(i, 0.5f);
 
         Color[,] result = new Color[i.GetLength(0), i.GetLength(1)];
 
@@ -560,7 +560,7 @@ public class _Filters : Singleton<_Filters>
     public Color[,] Dilation(Color[,] i, int k)
     {
         //set source image to grayscale
-        i = PointProcessing.Instance.Treshold(i, 0.5f);
+        i = Treshold(i, 0.5f);
 
         Color[,] result = new Color[i.GetLength(0), i.GetLength(1)];
 
