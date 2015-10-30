@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Mono.Cecil.Cil;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 using System.Collections;
 
@@ -46,9 +46,9 @@ public class _Filters : Singleton<_Filters>
     /// <returns>binary image</returns>
     public Color[,] Treshold(Color[,] i, float t)
     {
-        for (int w = 0; w < i.GetLength(1); w++)
+        for (int w = 0; w < i.GetLength(0); w++)
         {
-            for (int h = 0; h < i.GetLength(0); h++)
+            for (int h = 0; h < i.GetLength(1); h++)
             {
                 float bw = (i[w, h].r + i[w, h].g + i[w, h].b) / 3;
                 bw = bw < t ? 0f : 1f;
@@ -647,21 +647,81 @@ public class _Filters : Singleton<_Filters>
 
     public Color[,] NormalizedRgb(Color[,] i)
     {
-        //code here
+        for (int w = 0; w < i.GetLength(0); w++)
+        {
+            for (int h = 0; h < i.GetLength(1); h++)
+            {
+                Color pix = i[w, h];
+                float sum = pix.r + pix.g + pix.b;
+                if (sum == 0f)
+                {
+                    i[w, h] = Color.black;
+                }
+                else
+                {
+                    i[w, h] = new Color(i[w, h].r / sum, i[w, h].g / sum, i[w, h].b / sum);
+                }
+            }
+        }
         return i;
     }
 
-    public Color[,] DetectColor(Color[,] i)
+    public Color[,] DetectColor(Color[,] i, Color targetColor, int spread, int method, float percent)
     {
-        //code here        
+        // regular method
+        
+        for (int w = 0; w < i.GetLength(0); w++)
+        {
+            for (int h = 0; h < i.GetLength(1); h++)
+            {
+                if (method == 0)
+                {
+                    Color pix = i[w, h];
+
+                    if (Mathf.Abs(pix.r - targetColor.r)*255f < spread && Mathf.Abs(pix.g - targetColor.g)*255f < spread &&
+                        Mathf.Abs(pix.b - targetColor.b)*255 < spread)
+                    {
+                        i[w, h] = Color.white;
+                    }
+                    else
+                    {
+                        i[w, h] = Color.black;
+                    }
+                }
+
+                //testing method (just for red)
+                if (method == 1)
+                {
+                    Color pix = i[w, h];
+                    float percentage = pix.r/(pix.r+pix.g+pix.b);
+
+                    if (percentage > percent)
+                    {
+                        i[w, h] = Color.white;
+                    }
+                    else
+                    {
+                        i[w, h] = Color.black;
+                    }
+                }
+            }
+        }
         return i;
     }
 
-    public Color[,] ImageSubtraction(Color[,] i)
+    public Color[,] ImageSubtraction(Color[,] i, Color[,] reference)
     {
         Color[,] result = new Color[i.GetLength(0),i.GetLength(1)];
 
-        //code here
+        for (int w = 0; w < i.GetLength(0); w++)
+        {
+            for (int h = 0; h < i.GetLength(1); h++)
+            {
+                result[w, h].r = Mathf.Abs(i[w, h].r - reference[w, h].r);
+                result[w, h].g = Mathf.Abs(i[w, h].g - reference[w, h].g);
+                result[w, h].b = Mathf.Abs(i[w, h].b - reference[w, h].b);
+            }
+        }
         return result;
     }
 
@@ -669,13 +729,35 @@ public class _Filters : Singleton<_Filters>
     {
         int[,] features = new int[256,3]; //feature one = x coord, feature two = y coord, feature three = size
 
-        //code here
+        for (int w = 0; w < i.GetLength(0); w++)
+        {
+            for (int h = 0; h < i.GetLength(1); h++)
+            {
+                if (i[w, h].r > 0)
+                {
+                    features[(int)(i[w, h].r * 255f), 0] += w; // if r = 0.5, r*255 = 127 --> features[127,0]
+                    features[(int)(i[w, h].r * 255f), 1] += h;
+                    features[(int)(i[w, h].r * 255f), 2]++;
+                }
+            }
+        }
         return features;
     }
 
     public void EvaluateFeatures(int[,] features)
     {
-        //code here
+        int[,] centerOfMass = new int[256, 2];
+
+        for (int i = 0; i < 256; i++)
+        {
+            if (features[i, 2] > 0)
+            {
+                centerOfMass[i, 0] = features[i, 0] / features[i, 2];
+                centerOfMass[i, 1] = features[i, 1] / features[i, 2];
+
+                Debug.Log(centerOfMass[i, 0] + " " + centerOfMass[i, 1] + " size: " + features[i, 2]);
+            }
+        }
     }
 }
 

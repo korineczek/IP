@@ -100,16 +100,16 @@ public class _Manager : Singleton<_Manager>
                 Image = filters.NormalizedRgb(Image);
                 break;
             case 16:
-                Image = filters.DetectColor(Image);
+                Image = filters.DetectColor(Image, new Color(220f/255, 10f/255, 10f/255), 50, 1, 0.66f); //red
                 break;
             case 17:
-                Image = filters.DetectColor(Image);
+                Image = filters.DetectColor(Image, new Color(10f/255, 220f/255, 20f/255), 50, 0, 0.66f); //green
                 break;
             case 18:
-                Image = filters.DetectColor(Image);
+                Image = filters.DetectColor(Image, new Color(10f/255, 10f/255, 220f/255), 50, 0, 0.66f); //blue
                 break;
             case 19:
-                Image = filters.ImageSubtraction(Image);
+                Image = filters.ImageSubtraction(Image, ReferenceImage);
                 break;
             case 20:
                 filters.EvaluateFeatures(filters.GetBlobFeatures(filters.BlobExtraction(Image)));
